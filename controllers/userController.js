@@ -10,7 +10,8 @@ const createUser = async (req, res) => {
 
     //3.Validate the data (if empty, stop the process and send res)
     if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({
+        res.json({
+            "success": false,
             "message": "Please enter all fields!"
         })
     }
@@ -19,9 +20,10 @@ const createUser = async (req, res) => {
         //5. Check if the user is already registered
         const existingUser = await User.findOne({ email: email })
         //5.1 If the user is found: Send response
-        if (existingUser) {
-            return res.status(400).json({
-                "message": "User already exists"
+        if(existingUser){
+            return res.json({
+                "success": false,
+                "message": "User Already Exists!"
             })
         }
 
@@ -42,14 +44,17 @@ const createUser = async (req, res) => {
         await user.save()
 
         //5.2.3 Send successful response
-        res.status(200).json({
-            message: "User created successfully!"
+        res.json({
+            "success": true,
+            "message": "User Created Successfuly!"
         })
 
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+        console.log(error)
+        res.json({
+            "success":false,
+            "message":"Internal Server Error!"
+        })
     }
 }
 
