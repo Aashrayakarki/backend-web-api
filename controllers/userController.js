@@ -58,6 +58,71 @@ const createUser = async (req, res) => {
     }
 }
 
-module.exports = {
-    createUser
+const loginUser = async (req, res) => {
+    // res.send("Login API is working!")
+
+    //Check incoming data
+    console.log(req.body)
+
+    //Desctructing
+    const {email, password}=req.body;
+
+    //Validation
+    if(!email || !password){
+        return res.json({
+            "success": false,
+            "message": "Please enter all fields!"
+        })
+    }
+
+    //try catch
+    try{
+        //find user (email)
+        const user = await userModel.findOne({email:email})
+        //Found data: firstName, lastName, email, password
+
+        //not found (error message)
+        if(!user){
+            return res.json({
+                "success": false,
+                "message": "User doesn't exist!!"
+            })
+        }
+
+        //Compare password (bcrypt)
+        const isValidPassword=await bcrypt.compare(password, user.password)
+
+        //not valid (error)
+        if(!isValidPassword)({
+            "success": false,
+            "message": "Password not matched!"
+        })
+
+        //token (Generate - user Data + KEY)
+        const token = await jwt.sign(
+            {id: user._id},
+            process.env.JWT_SECRET
+        )
+
+        //response (token, user data)
+        res.json({
+            "success": true,
+            "message": "User Logged in Successfully",
+            "token": token,
+            "userData": user
+        })
+
+    }catch(error){
+        console.log(error)
+        return res.json({
+            "success":false,
+            "message":"Internal Server Error!"
+        })
+    }
+}
+
+//exporting
+module.exports={
+    createUser,
+    loginUser
 }
