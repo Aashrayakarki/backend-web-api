@@ -3,8 +3,6 @@ const connectDatabase = require('./database/database.js')
 const dotenv = require('dotenv');
 const cors = require('cors')
 
-
-
 const app = express();
 
 const corsOptions = {

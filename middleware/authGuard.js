@@ -42,7 +42,6 @@ const authGuard = (req, res, next)=> {
 
     //If verified: next(function in controller)
 
-
     //If not verified: noth auth
 }
 
