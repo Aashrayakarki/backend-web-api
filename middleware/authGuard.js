@@ -1,50 +1,11 @@
-const jwt = require('jsonwebtoken');
+import React from 'react'
 
-const authGuard = (req, res, next)=> {
-    //check incoming data
-    console.log(req.headers); //pass
-
-    //Get authorized data from headers
-    const authHeader = req.headers.authorization;
-
-    //check or validate the data
-    if (!authHeader){
-        return res.status(400).json({
-            success: false,
-            message: 'Authorization header is missing'
-        })
-    }
-
-    //Split the data (format: 'Bearer token-sdfgts') - only token
-    const token = authHeader.split(' ')[1];
-
-    //If token not found: stop the process (res)
-    if (!token || token === ''){
-        return res.status(400).json({
-            success: false,
-            message: 'Token not found'
-        })
-    }
-
-    //Verify
-    try {
-        const decodedUserData = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decodedUserData;
-        next();
-    } catch (error) {
-        res.status(400).json(
-            {
-                success: false,
-                message: 'Not Authenticated'
-            }
-        )
-    }
-
-    //If verified: next(function in controller)
-
-    //If not verified: noth auth
+const authGuard = () => {
+  return (
+    <div>
+      
+    </div>
+  )
 }
 
-module.exports={
-    authGuard
-}
+export default authGuard
