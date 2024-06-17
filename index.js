@@ -2,8 +2,9 @@ const express = require('express');
 const connectDatabase = require('./database/database.js')
 const dotenv = require('dotenv');
 const cors = require('cors')
-const acceptFormData = require('express-fileupload')
-
+const fileUpload = require('express-fileupload');
+const acceptFormData = require('express-fileupload');
+const multipart = require('connect-multiparty');
 
 const app = express();
 
@@ -15,10 +16,18 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
+//Use express file upload
+app.use(fileUpload())
+
 //Express Json Config
 app.use(express.json())
 
 app.use(acceptFormData())
+
+//Make a static public folder
+app.use(express.static('./public'))
+
+app.use(multipart());
 
 //dotenv Configuration
 dotenv.config()
@@ -37,6 +46,8 @@ app.get('/test', (req,res)=>{
 
 //configuring Routes of User
 app.use('/api/user', require('./routes/userRoutes.js'))
+
+//configuring Routes of Exercise
 
 //Starting the server
 app.listen(PORT, ()=>{
