@@ -48,6 +48,7 @@ app.get('/test', (req,res)=>{
 app.use('/api/user', require('./routes/userRoutes.js'))
 
 //configuring Routes of Exercise
+app.use('/api/exercise', require('./routes/exerciseRoutes.js'))
 
 //Starting the server
 app.listen(PORT, ()=>{
