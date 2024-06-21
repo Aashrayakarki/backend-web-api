@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const connectDatabase = () => {
+const connectDatabase = async () => {
 
   mongoose.connect(process.env.MONGODB_CLOUD).then(() => {
 

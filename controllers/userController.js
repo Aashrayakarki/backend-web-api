@@ -6,9 +6,9 @@ require('dotenv').config();
 const createUser = async (req, res) => {
     console.log(req.body);
 
-    const { firstName, lastName, email, password } = req.body;
+    const { fname, lname, email, password, phone } = req.body;
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!fname || !lname || !email || !password || !phone) {
         return res.json({
             "success": false,
             "message": "Please enter all fields!"
@@ -28,9 +28,10 @@ const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, randomSalt);
 
         const user = new User({
-            firstName: firstName,
-            lastName: lastName,
+            fname: fname,
+            lname: lname,
             email: email,
+            phone: phone,
             password: hashedPassword,
         });
 
