@@ -1,24 +1,41 @@
 const Exercise = require('../models/exerciseModel');
 const path = require('path');
+const fs = require('fs');
 
-const createExercise = async (req, res) => {
+const createExercise = async (req, res) => {    
+
+
+    console.log(req.body);
+    console.log
     const { exerciseName, exerciseTime, exerciseCalories, exerciseLevel } = req.body;
-    const exerciseVideo = req.files;
+    
 
     if (!exerciseName || !exerciseTime || !exerciseCalories || !exerciseLevel){
-        return res.send({
-            success: false,
-            message: "Please enter all the fields"
-        })
+        return res.status(400).json({
+            "success": false,
+            "message": "Please enter all the fields"
+        });
     }
 
-    //validate if there is video
+
+    // validate if there is video
     if (!req.files || !req.files.exerciseVideo) {
-        return res.json({
+
+        return res.status(400).json({
             "success": false,
             "message": "Please upload a video!!"
-        })
+        });
     }
+
+    const {exerciseVideo} = req.files;
+
+
+
+
+
+
+
+
 
     //upload video
     //1. Generate new video name
@@ -37,7 +54,7 @@ const createExercise = async (req, res) => {
             exerciseCalories: exerciseCalories,
             exerciseTime: exerciseTime,
             exerciseLevel: exerciseLevel,
-            exerciseVideo: exerciseVideo
+            exerciseVideo: videoName
         })
         const exercise = await newExercise.save()
         res.status(201).json({

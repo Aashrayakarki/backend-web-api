@@ -1,13 +1,14 @@
+//Importing the packages (express)
 const express = require('express');
-const connectDatabase = require('./database/database.js')
+const connectDatabase = require('./database/database');
 const dotenv = require('dotenv');
 const cors = require('cors')
-const fileUpload = require('express-fileupload');
-const acceptFormData = require('express-fileupload');
-const multipart = require('connect-multiparty');
+const acceptFormData = require('express-fileupload')
 
+//Creating an express app
 const app = express();
 
+//Configure cors policy
 const corsOptions = {
     origin: true,
     credentials: true,
@@ -16,18 +17,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-//Use express file upload
-app.use(fileUpload())
-
 //Express Json Config
 app.use(express.json())
 
+//Config form data
 app.use(acceptFormData())
 
 //Make a static public folder
 app.use(express.static('./public'))
-
-app.use(multipart());
 
 //dotenv Configuration
 dotenv.config()
@@ -44,13 +41,19 @@ app.get('/test', (req,res)=>{
     res.send("Test API is Working!...")
 })
 
-//configuring Routes of User
-app.use('/api/user', require('./routes/userRoutes.js'))
+//http://localhost:5000/test
 
-//configuring Routes of Exercise
-app.use('/api/exercise', require('./routes/exerciseRoutes.js'))
+//configuring Routes of User
+app.use('/api/user', require('./routes/userRoutes'))
+
+app.use('/api/exercise', require('./routes/exerciseRoutes'))
+
+//http://localhost:5000/api/user//create
 
 //Starting the server
 app.listen(PORT, ()=>{
     console.log(`Server is Running on port ${PORT}!`)
 })
+
+//Exporting
+module.exports = app;
