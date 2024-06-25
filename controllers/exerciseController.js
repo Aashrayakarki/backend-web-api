@@ -8,7 +8,6 @@ const createExercise = async (req, res) => {
     console.log(req.body);
     console.log
     const { exerciseName, exerciseTime, exerciseCalories, exerciseLevel } = req.body;
-    
 
     if (!exerciseName || !exerciseTime || !exerciseCalories || !exerciseLevel){
         return res.status(400).json({
@@ -16,7 +15,6 @@ const createExercise = async (req, res) => {
             "message": "Please enter all the fields"
         });
     }
-
 
     // validate if there is video
     if (!req.files || !req.files.exerciseVideo) {
@@ -28,14 +26,6 @@ const createExercise = async (req, res) => {
     }
 
     const {exerciseVideo} = req.files;
-
-
-
-
-
-
-
-
 
     //upload video
     //1. Generate new video name
@@ -92,7 +82,81 @@ const getAllExercises = async (req, res) => {
     }
 }
 
+//Fetch single exercise
+const getSingleExercise = async (req, res) => {
+    const exerciseId = req.params.id;
+    try {
+        const singleExercise = await Exercise.findById(exerciseId)
+        if (!singleExercise) {
+            return res.status(400).json({
+                "success": false,
+                "message": "Product not found"
+            })
+        }
+
+        res.status(201).json({
+            "success": true,
+            "message": "Product fetched successfully",
+            "data": singleExercise
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            "success": false,
+            "message": "Internal server error",
+            "error": error
+        })
+    }
+}
+
+
+const updateExercise = async (req, res) => {
+    try {
+        // if there is image
+        if (req.files && req.files.exerciseVideo) {
+            // destructuring
+            const { exerciseVideo } = req.files;
+            // upload image to /public/products folder
+            // 1. Generate new image name (abc.png) -> (213456-abc.png)
+            const videoName = `${Date.now()}-${exerciseVideo.name}`
+            // 2. Make a upload path (/path/uplad - directory)
+            const videoUploadPath = path.join(__dirname, `../public/products/${videoName}`)
+            // Move to folder
+            await exerciseVideo.mv(videoUploadPath)
+            // req.params (id), req.body(updated data - pn,pp,pc,pd), req.files (image)
+            // add new field to req.body (productImage -> name)
+            req.body.exerciseVideo = videoName; // image uploaded (generated name)
+            // if image is uploaded and req.body is assingned
+            if(req.body.exerciseVideo){
+                // Finding existing product
+                const existingExercise = await Exercise.findById(req.params.id)
+                // Searching in the directory/folder
+                const oldVideoPath = path.join(__dirname, `../public/products/${existingExercise.exerciseVideo}`)
+                // delete from filesystem
+                fs.unlinkSync(oldVideoPath)
+            }
+        }
+        // Update the data
+        const updatedExercise = await Exercise.findByIdAndUpdate(req.params.id, req.body)
+        res.status(201).json({
+            success : true,
+            message : "Product updated!",
+            product :  updatedExercise
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error!",
+            error: error
+        })
+    }
+}
+
+
 module.exports = {
     createExercise,
-    getAllExercises
+    getAllExercises,
+    getSingleExercise,
+    updateExercise
 }

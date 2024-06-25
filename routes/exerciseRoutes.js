@@ -8,4 +8,7 @@ router.post('/create', exerciseController.createExercise);
 // GET request to fetch all exercises
 router.get('/get_all_exercises', exerciseController.getAllExercises);
 
+// GET request to fetch single exercise
+router.get('/get_exercise/:id', exerciseController.getSingleExercise);
+
 module.exports = router;
