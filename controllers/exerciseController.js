@@ -153,10 +153,48 @@ const updateExercise = async (req, res) => {
     }
 }
 
+//Pagination
+const paginationExercises = async (req, res) => {
+    //page number
+    const pageNo = req.query.page || 1;
+
+    //result per page
+    const resultPerPage = 3;
+    try {
+        //Find all products, skip, limit
+        const exercises = await Exercise.find({})
+        .skip((pageNo - 1) * resultPerPage)
+        .limit(resultPerPage)
+
+        //if page 6 is requested, result 0
+        if(exercises.length === 0){
+            return res.status(400).json({
+                "success": false,
+                "message": "No exercises found"
+            })
+        }
+
+        //send response
+        res.status(201).json({
+            "success": true,
+            "message": "Exercises fetched successfully",
+            "exercise": exercises
+        })
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            "success": false,
+            "message": "Internal server error",
+        })
+    }
+}
 
 module.exports = {
     createExercise,
     getAllExercises,
     getSingleExercise,
-    updateExercise
+    updateExercise,
+    paginationExercises
 }
