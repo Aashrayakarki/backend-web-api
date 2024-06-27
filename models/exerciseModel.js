@@ -6,11 +6,11 @@ const exerciseSchema = new mongoose.Schema({
         required: true
     },
     exerciseTime: {
-        type: Number,
+        type: String,
         required: true,
     },
     exerciseCalories: {
-        type: Number,
+        type: String,
         required: true,
     },
     exerciseLevel: {

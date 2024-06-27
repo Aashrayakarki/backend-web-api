@@ -109,6 +109,25 @@ const getSingleExercise = async (req, res) => {
     }
 }
 
+//delete exercise
+const deleteExercise = async (req, res) => {
+    try {
+        await Exercise.findByIdAndDelete(req.params.id)
+        res.status(201).json({
+            "success": true,
+            "message": "Exercise deleted successfully"
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            "success": false,
+            "message": "Internal server error",
+            "error": error
+        })
+    }
+}
+
+
 
 const updateExercise = async (req, res) => {
     try {
@@ -196,5 +215,6 @@ module.exports = {
     getAllExercises,
     getSingleExercise,
     updateExercise,
+    deleteExercise,
     paginationExercises
 }

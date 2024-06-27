@@ -14,6 +14,9 @@ router.get('/get_exercise/:id', exerciseController.getSingleExercise);
 // PUT request to update exercise
 router.put('/update/:id', exerciseController.updateExercise);
 
+// DELETE request to delete exercise
+router.delete('/delete/:id', exerciseController.deleteExercise);
+
 // Pagination
 router.get('/pagination', exerciseController.paginationExercises);
 
