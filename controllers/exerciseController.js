@@ -127,8 +127,6 @@ const deleteExercise = async (req, res) => {
     }
 }
 
-
-
 const updateExercise = async (req, res) => {
     try {
         // if there is image
