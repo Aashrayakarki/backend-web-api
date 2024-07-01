@@ -170,43 +170,44 @@ const updateExercise = async (req, res) => {
     }
 }
 
-//Pagination
 const paginationExercises = async (req, res) => {
-    //page number
-    const pageNo = req.query.page || 1;
+    const pageNo = parseInt(req.query.page) || 1; // Parse page number as an integer
+    const resultPerPage = 2; // Number of results per page
 
-    //result per page
-    const resultPerPage = 3;
     try {
-        //Find all products, skip, limit
-        const exercises = await Exercise.find({})
-        .skip((pageNo - 1) * resultPerPage)
-        .limit(resultPerPage)
+        const totalExercises = await Exercise.countDocuments(); // Get the total number of exercises
+        const allExercises = await Exercise.find({})
+            .skip((pageNo - 1) * resultPerPage)
+            .limit(resultPerPage);
 
-        //if page 6 is requested, result 0
-        if(exercises.length === 0){
+        // Check if the page number is valid
+        if (allExercises.length === 0 && pageNo !== 1) {
             return res.status(400).json({
-                "success": false,
-                "message": "No exercises found"
-            })
+                success: false,
+                message: "No exercises found",
+            });
         }
 
-        //send response
-        res.status(201).json({
-            "success": true,
-            "message": "Exercises fetched successfully",
-            "exercise": exercises
-        })
-
-
+        // Send response with pagination data
+        res.status(200).json({
+            success: true,
+            message: "Exercises fetched successfully",
+            data: allExercises,
+            pagination: {
+                totalExercises: totalExercises,
+                currentPage: pageNo,
+                totalPages: Math.ceil(totalExercises / resultPerPage),
+            },
+        });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({
-            "success": false,
-            "message": "Internal server error",
-        })
+            success: false,
+            message: "Internal server error",
+            error: error,
+        });
     }
-}
+};
 
 module.exports = {
     createExercise,
