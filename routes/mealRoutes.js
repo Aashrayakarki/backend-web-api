@@ -2,7 +2,7 @@ const router = require("./exerciseRoutes");
 const mealController = require("../controllers/mealController");
 
 //POST request to create meal
-router.post('/create/meal', mealController.createMeal);
+router.post('/create_meal', mealController.createMeal);
 
 //GET request to fetch all meals
 router.get('/get_all_meals', mealController.getAllMeals);
@@ -17,4 +17,6 @@ router.put('/update_meal/:id', mealController.updateMeal);
 router.delete('/delete_meal/:id', mealController.deleteMeal);
 
 //Pagination
-router.get('/pagination_meals', mealController.paginationMeals);
+router.get('/pagination_meal', mealController.paginationMeals);
+
+module.exports = router;

@@ -4,8 +4,7 @@ const Meal = require('../models/mealModel');
 
 const createMeal = async (req, res) => {    
     console.log(req.body);
-    console.log
-    const { mealName, mealTime, mealCalories} = req.body;
+    const {mealName, mealTime, mealCalories} = req.body;
 
     if (!mealName || !mealTime || !mealCalories){
         return res.status(400).json({
@@ -15,10 +14,9 @@ const createMeal = async (req, res) => {
     }
 
     if (!req.files || !req.files.mealImage) {
-
         return res.status(400).json({
             "success": false,
-            "message": "Please upload a video!!"
+            "message": "Please upload an image!!"
         });
     }
 
@@ -35,13 +33,13 @@ const createMeal = async (req, res) => {
             mealName: mealName,
             mealCalories: mealCalories,
             mealTime: mealTime,
-            mealImage: mealImage
+            mealImage: imageName
         })
         const meal = await newMeal.save()
         res.status(201).json({
             "success": true,
             "message": "Exercise created successfully",
-            "data": exercise
+            "data": meal
         })
 
     } catch (error) {

@@ -3,10 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const createExercise = async (req, res) => {    
-
-
     console.log(req.body);
-    console.log
     const { exerciseName, exerciseTime, exerciseCalories, exerciseLevel } = req.body;
 
     if (!exerciseName || !exerciseTime || !exerciseCalories || !exerciseLevel){

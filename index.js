@@ -48,6 +48,8 @@ app.use('/api/user', require('./routes/userRoutes'))
 
 app.use('/api/exercise', require('./routes/exerciseRoutes'))
 
+app.use('/api/meal', require('./routes/mealRoutes'))
+
 //http://localhost:5000/api/user//create
 
 //Starting the server
