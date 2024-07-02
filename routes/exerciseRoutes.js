@@ -19,6 +19,6 @@ router.put('/update_exercise/:id', adminGuard, exerciseController.updateExercise
 router.delete('/delete/:id', exerciseController.deleteExercise);
 
 // Pagination
-router.get('/pagination', exerciseController.paginationExercises);
+router.get('/pagination_exercises', exerciseController.paginationExercises);
 
 module.exports = router;

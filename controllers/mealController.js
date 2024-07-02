@@ -52,6 +52,7 @@ const createMeal = async (req, res) => {
             "error": error
         })
     }
+}
 
 const getAllMeals = async (req, res) => {
     try {
@@ -114,7 +115,7 @@ const deleteMeal = async (req, res) => {
     }
 }
 
-const updatedMeal = async (req, res) => {
+const updateMeal = async (req, res) => {
     try {
         if (req.files && req.files.mealImage) {
             const { mealImage } = req.files;
@@ -150,13 +151,52 @@ const updatedMeal = async (req, res) => {
         })
     }
 }
-    
+
+const paginationMeals = async (req, res) => {
+    const pageNo = parseInt(req.query.page) || 1; 
+    const resultPerPage = 2; 
+
+    try {
+        const totalMeals = await Meal.countDocuments(); 
+        const allMeals = await Meal.find({})
+            .skip((pageNo - 1) * resultPerPage)
+            .limit(resultPerPage);
+
+        // Check if the page number is valid
+        if (allMeals.length === 0 && pageNo !== 1) {
+            return res.status(400).json({
+                success: false,
+                message: "No meals found",
+            });
+        }
+
+        // Send response with pagination data
+        res.status(200).json({
+            success: true,
+            message: "Meals fetched successfully",
+            data: allMeals,
+            pagination: {
+                totalMeals: totalMeals,
+                currentPage: pageNo,
+                totalPages: Math.ceil(totalMeals / resultPerPage),
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error,
+        });
+    }
 };
+
 
 module.exports = {
     createMeal,
     getAllMeals,
     getSingleMeal,
     deleteMeal,
-    updateMeal
+    updateMeal,
+    paginationMeals
 }
