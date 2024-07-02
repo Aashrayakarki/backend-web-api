@@ -13,10 +13,10 @@ router.get('/get_all_exercises', authGuard, exerciseController.getAllExercises);
 router.get('/get_exercise/:id', authGuard, exerciseController.getSingleExercise);
 
 // PUT request to update exercise
-router.put('/update/:id', adminGuard, exerciseController.updateExercise);
+router.put('/update_exercise/:id', adminGuard, exerciseController.updateExercise);
 
 // DELETE request to delete exercise
-router.delete('/delete/:id', adminGuard, exerciseController.deleteExercise);
+router.delete('/delete/:id', exerciseController.deleteExercise);
 
 // Pagination
 router.get('/pagination', exerciseController.paginationExercises);
