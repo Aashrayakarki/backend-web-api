@@ -4,9 +4,9 @@ const Meal = require('../models/mealModel');
 
 const createMeal = async (req, res) => {    
     console.log(req.body);
-    const {mealName, mealTime, mealCalories} = req.body;
+    const {mealName, mealTime, mealCalories, mealProteins, mealCarbs} = req.body;
 
-    if (!mealName || !mealTime || !mealCalories){
+    if (!mealName || !mealTime || !mealCalories || !mealProteins || !mealCarbs){
         return res.status(400).json({
             "success": false,
             "message": "Please enter all the fields"
@@ -32,13 +32,15 @@ const createMeal = async (req, res) => {
         const newMeal = new Meal({
             mealName: mealName,
             mealCalories: mealCalories,
+            mealProteins: mealProteins,
+            mealCarbs: mealCarbs,
             mealTime: mealTime,
             mealImage: imageName
         })
         const meal = await newMeal.save()
         res.status(201).json({
             "success": true,
-            "message": "Exercise created successfully",
+            "message": "Meal plan created successfully",
             "data": meal
         })
 

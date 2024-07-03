@@ -13,6 +13,14 @@ const mealSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    mealProteins:{
+        type: String,
+        required: true,
+    },
+    mealCarbs:{
+        type: String,
+        required: true,
+    },
     mealImage: {
         type: String,
         required: true,
