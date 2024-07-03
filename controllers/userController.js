@@ -6,9 +6,9 @@ require('dotenv').config();
 const createUser = async (req, res) => {
     console.log(req.body);
 
-    const { fname, lname, email, password, phone } = req.body;
+    const { fname, lname, email, password, phone, height, weight, age, gender} = req.body;
 
-    if (!fname || !lname || !email || !password || !phone) {
+    if (!fname || !lname || !email || !password || !phone || !height || !weight || !age || !gender) {
         return res.json({
             "success": false,
             "message": "Please enter all fields!"
@@ -33,6 +33,10 @@ const createUser = async (req, res) => {
             email: email,
             phone: phone,
             password: hashedPassword,
+            height: height,
+            weight: weight,
+            age: age,
+            gender: gender
         });
 
         await user.save();
