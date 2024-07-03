@@ -113,8 +113,21 @@ const loginUser = async (req, res) => {
 }
 
 
+const getSingleUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+        res.status(200).send({ data: user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Server error' });
+    }
+}
 //exporting
 module.exports = {
     createUser,
     loginUser,
+    getSingleUser
 }

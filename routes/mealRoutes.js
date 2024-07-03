@@ -1,5 +1,6 @@
 const router = require("./exerciseRoutes");
 const mealController = require("../controllers/mealController");
+const { adminGuard } = require("../middleware/authGuard");
 
 //POST request to create meal
 router.post('/create_meal', mealController.createMeal);

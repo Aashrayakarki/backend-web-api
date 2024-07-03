@@ -13,7 +13,7 @@ router.get('/get_all_exercises', authGuard, exerciseController.getAllExercises);
 router.get('/get_exercise/:id', authGuard, exerciseController.getSingleExercise);
 
 // PUT request to update exercise
-router.put('/update/:id', adminGuard, exerciseController.updateExercise);
+router.put('/update/:id', exerciseController.updateExercise);
 
 // DELETE request to delete exercise
 router.delete('/delete/:id', exerciseController.deleteExercise);
