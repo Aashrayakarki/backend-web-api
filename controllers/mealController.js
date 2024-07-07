@@ -154,7 +154,7 @@ const updateMeal = async (req, res) => {
 
 const paginationMeals = async (req, res) => {
     const pageNo = parseInt(req.query.page) || 1; 
-    const resultPerPage = 2; 
+    const resultPerPage = 4; 
 
     try {
         const totalMeals = await Meal.countDocuments(); 

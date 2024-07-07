@@ -169,7 +169,7 @@ const updateExercise = async (req, res) => {
 
 const paginationExercises = async (req, res) => {
     const pageNo = parseInt(req.query.page) || 1; // Parse page number as an integer
-    const resultPerPage = 3; // Number of results per page
+    const resultPerPage = 4; // Number of results per page
 
     try {
         const totalExercises = await Exercise.countDocuments(); // Get the total number of exercises
