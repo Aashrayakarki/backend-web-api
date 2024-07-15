@@ -5,4 +5,4 @@ router.post('/register', userController.createUser);
 router.post('/login', userController.loginUser);
 router.get('/get_single_user/:_id', userController.getSingleUser);
 
-module.exports = router;
+module.exports = router

@@ -206,11 +206,50 @@ const paginationExercises = async (req, res) => {
     }
 };
 
+//Searching Exercise
+const searchExercise = async (req, res) => {
+    const searchQuery = req.query.q || '';
+    const searchLevel = req.query.category || '';
+    
+    try {
+        const filter = {};
+
+        if (searchQuery) {
+            filter.exerciseName = {
+                $regex: searchQuery,
+                $options: 'i'
+            };
+        }
+
+        if (searchLevel) {
+            filter.exerciseLevel = {
+                $regex: searchLevel,
+                $options: 'i'
+            };
+        }
+
+        const exercises = await Exercise.find(filter);
+        res.status(201).json({
+            success: true,
+            message: "Exercises fetched successfully",
+            data: exercises
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
 module.exports = {
     createExercise,
     getAllExercises,
     getSingleExercise,
     updateExercise,
     deleteExercise,
-    paginationExercises
+    paginationExercises,
+    searchExercise
 }
