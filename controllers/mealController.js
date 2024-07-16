@@ -191,6 +191,36 @@ const paginationMeals = async (req, res) => {
     }
 };
 
+//Searching Meal
+const searchMeal = async (req, res) => {
+    const searchQuery = req.query.search || '';
+    
+    try {
+        const filter = {};
+
+        if (searchQuery) {
+            filter.mealName = {
+                $regex: searchQuery,
+                $options: 'i'
+            };
+        }
+        const meals = await Meal.find(filter);
+        res.status(201).json({
+            success: true,
+            message: "Meals fetched successfully",
+            data: meals
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error
+        });
+    }
+}
+
+
 
 module.exports = {
     createMeal,
@@ -198,5 +228,6 @@ module.exports = {
     getSingleMeal,
     deleteMeal,
     updateMeal,
-    paginationMeals
+    paginationMeals,
+    searchMeal
 }

@@ -20,4 +20,7 @@ router.delete('/delete_meal/:id', mealController.deleteMeal);
 //Pagination
 router.get('/pagination_meal', mealController.paginationMeals);
 
+//Search
+router.get('/search_meal', mealController.searchMeal);
+
 module.exports = router;
