@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
 
     phone:{
         type: Number,
+        unique: true,
         required: true,
     },
 
@@ -47,6 +48,16 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
 
+    resetPasswordOTP:{
+        type: Number,
+        default: null
+    },
+
+    resetPasswordExpires:{
+        type: Date,
+        default: null
+    },
+    
     isAdmin: {
         type: Boolean,
         default: false
