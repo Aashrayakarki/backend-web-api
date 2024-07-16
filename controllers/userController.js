@@ -182,6 +182,57 @@ const forgotPassword = async (req, res) => {
     }
 }
 
+const verifyOtpAndSetPassword = async (req, res) => {
+    //get data
+    const {phone, otp, newPassword} = req.body;
+    if(!phone || !otp || !newPassword){
+        return res.status(400).json({
+            "success": false,
+            "message": "Please enter all fields!"
+        })
+    }
+
+    try {
+        const user = await userModel.findOne({phone: phone})
+        
+        //Verify OTP
+        if(user.resetPasswordOTP != otp){
+            return res.status(400).json({
+                "success": false,
+                "message": "Invalid OTP!"
+            })
+        }
+
+        if(user.resetPasswordExpires < Date.now()){
+            return res.status(400).json({
+                "success": false,
+                "message": "OTP Expired!"
+            })
+        }
+
+        //password hashing
+        const randomSalt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(newPassword, randomSalt)
+
+        //update to database
+        user.password = hashedPassword
+        await user.save()
+
+        //response
+        return res.status(200).json({
+            "success": true,
+            "message": "OTP verified and password updated successfully!"
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            "success": false,
+            "message": "Internal Server Error!"
+        })
+    }
+}
+
 //exporting
 module.exports = {
     createUser,
