@@ -208,8 +208,7 @@ const paginationExercises = async (req, res) => {
 
 //Searching Exercise
 const searchExercise = async (req, res) => {
-    const searchQuery = req.query.q || '';
-    const searchLevel = req.query.category || '';
+    const searchQuery = req.query.search || '';
     
     try {
         const filter = {};
@@ -220,14 +219,6 @@ const searchExercise = async (req, res) => {
                 $options: 'i'
             };
         }
-
-        if (searchLevel) {
-            filter.exerciseLevel = {
-                $regex: searchLevel,
-                $options: 'i'
-            };
-        }
-
         const exercises = await Exercise.find(filter);
         res.status(201).json({
             success: true,

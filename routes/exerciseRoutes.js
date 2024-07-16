@@ -21,4 +21,7 @@ router.delete('/delete/:id', adminGuard, exerciseController.deleteExercise);
 // Pagination
 router.get('/pagination_exercise', exerciseController.paginationExercises);
 
+// Search
+router.get('/search_exercise', exerciseController.searchExercise);
+
 module.exports = router;
