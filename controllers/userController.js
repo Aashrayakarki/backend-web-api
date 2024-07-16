@@ -125,6 +125,63 @@ const getSingleUser = async (req, res) => {
         res.status(500).send({ message: 'Server error' });
     }
 }
+
+//Forgot password by using phone number
+const forgotPassword = async (req, res) => {
+    const { phone } = req.body;
+
+    if (!phone) {
+        return res.status(400).json({
+            "success": false,
+            "message": "Please enter phone number!"
+        })
+    }
+    try {
+        //finding user
+        const user = await userModel.findOne({ phone: phone })
+        if (!user) {
+            return res.status(400).json({
+                "success": false,
+                "message": "User not found!"
+            })
+        }
+
+        //Generate random 6 digit OTP
+        const OTP = Math.floor(100000 + Math.random() * 900000)
+
+        //generate expiry date
+        const expiryDate = Date.now() + 360000
+
+        //save to database for verification
+        user.resetPasswordOTP = OTP
+        user.resetPasswordExpires = expiryDate
+        await user.save()
+
+        //send OTP to registered phone number
+        const isSent = await sendOtp(phone, OTP)
+        if (!isSent) {
+            return res.status(400).json({
+                "success": false,
+                "message": "Error sending OTP code!"
+            })
+        }
+
+        //if success
+        return res.status(200).json({
+            "success": true,
+            "message": "OTP sent successfully!"
+        })
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            "success": false,
+            "message": "Internal Server Error!"
+        })
+    }
+}
+
 //exporting
 module.exports = {
     createUser,
