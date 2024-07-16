@@ -7,16 +7,16 @@ const { adminGuard, authGuard } = require('../middleware/authGuard');
 router.post('/create', exerciseController.createExercise);
 
 // GET request to fetch all exercises
-router.get('/get_all_exercises', exerciseController.getAllExercises);
+router.get('/get_all_exercises', authGuard, exerciseController.getAllExercises);
 
 // GET request to fetch single exercise
-router.get('/get_exercise/:id', exerciseController.getSingleExercise);
+router.get('/get_exercise/:id', authGuard, exerciseController.getSingleExercise);
 
 // PUT request to update exercise
-router.put('/update/:id', adminGuard, exerciseController.updateExercise);
+router.put('/update/:id', exerciseController.updateExercise);
 
 // DELETE request to delete exercise
-router.delete('/delete/:id', adminGuard, exerciseController.deleteExercise);
+router.delete('/delete/:id', exerciseController.deleteExercise);
 
 // Pagination
 router.get('/pagination_exercise', exerciseController.paginationExercises);
