@@ -137,7 +137,6 @@ const forgotPassword = async (req, res) => {
         })
     }
     try {
-        //finding user
         const user = await userModel.findOne({ phone: phone })
         if (!user) {
             return res.status(400).json({
@@ -146,18 +145,14 @@ const forgotPassword = async (req, res) => {
             })
         }
 
-        //Generate random 6 digit OTP
         const OTP = Math.floor(100000 + Math.random() * 900000)
 
-        //generate expiry date
         const expiryDate = Date.now() + 360000
 
-        //save to database for verification
         user.resetPasswordOTP = OTP
         user.resetPasswordExpires = expiryDate
         await user.save()
 
-        //send OTP to registered phone number
         const isSent = await sendOtp(phone, OTP)
         if (!isSent) {
             return res.status(400).json({
@@ -166,7 +161,6 @@ const forgotPassword = async (req, res) => {
             })
         }
 
-        //if success
         return res.status(200).json({
             "success": true,
             "message": "OTP sent successfully!"
@@ -183,7 +177,6 @@ const forgotPassword = async (req, res) => {
 }
 
 const verifyOtpAndSetPassword = async (req, res) => {
-    //get data
     const {phone, otp, newPassword} = req.body;
     if(!phone || !otp || !newPassword){
         return res.status(400).json({
@@ -195,7 +188,6 @@ const verifyOtpAndSetPassword = async (req, res) => {
     try {
         const user = await userModel.findOne({phone: phone})
         
-        //Verify OTP
         if(user.resetPasswordOTP != otp){
             return res.status(400).json({
                 "success": false,
@@ -214,11 +206,9 @@ const verifyOtpAndSetPassword = async (req, res) => {
         const randomSalt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(newPassword, randomSalt)
 
-        //update to database
         user.password = hashedPassword
         await user.save()
 
-        //response
         return res.status(200).json({
             "success": true,
             "message": "OTP verified and password updated successfully!"
@@ -237,5 +227,7 @@ const verifyOtpAndSetPassword = async (req, res) => {
 module.exports = {
     createUser,
     loginUser,
-    getSingleUser
+    getSingleUser,
+    forgotPassword,
+    verifyOtpAndSetPassword
 }
