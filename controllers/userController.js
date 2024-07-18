@@ -126,6 +126,36 @@ const getSingleUser = async (req, res) => {
     }
 }
 
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        // Find and update user, return the new document
+        const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found!",
+            });
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "User updated!",
+            user: updatedUser  // Change 'product' to 'user'
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error!",
+            error: error.message
+        });
+    }
+};
+
 //Forgot password by using phone number
 const forgotPassword = async (req, res) => {
     const { phone } = req.body;
@@ -223,11 +253,13 @@ const verifyOtpAndSetPassword = async (req, res) => {
     }
 }
 
+
 //exporting
 module.exports = {
     createUser,
     loginUser,
     getSingleUser,
+    updateUser,
     forgotPassword,
     verifyOtpAndSetPassword
 }
