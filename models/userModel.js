@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
 
+    profilePicture: {
+        type: String,
+        default: null
+    },
+
     resetPasswordOTP:{
         type: Number,
         default: null
