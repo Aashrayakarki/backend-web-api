@@ -104,13 +104,13 @@ const getSingleExercise = async (req, res) => {
         if (!singleExercise) {
             return res.status(400).json({
                 "success": false,
-                "message": "Product not found"
+                "message": "Exercise not found"
             });
         }
 
         res.status(201).json({
             "success": true,
-            "message": "Product fetched successfully",
+            "message": "Exercise fetched successfully",
             "data": singleExercise
         });
     } catch (error) {
@@ -184,7 +184,7 @@ const updateExercise = async (req, res) => {
         const updatedExercise = await Exercise.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.status(201).json({
             success: true,
-            message: "Product updated!",
+            message: "Exercise updated!",
             product: updatedExercise
         });
     } catch (error) {
