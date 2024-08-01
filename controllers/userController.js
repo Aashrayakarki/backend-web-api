@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sendOtp = require("../service/sendOtp");
 require('dotenv').config();
 
 const createUser = async (req, res) => {
@@ -167,7 +168,7 @@ const forgotPassword = async (req, res) => {
         })
     }
     try {
-        const user = await userModel.findOne({ phone: phone })
+        const user = await User.findOne({ phone: phone })
         if (!user) {
             return res.status(400).json({
                 "success": false,
@@ -216,7 +217,7 @@ const verifyOtpAndSetPassword = async (req, res) => {
     }
 
     try {
-        const user = await userModel.findOne({phone: phone})
+        const user = await User.findOne({phone: phone})
         
         if(user.resetPasswordOTP != otp){
             return res.status(400).json({
