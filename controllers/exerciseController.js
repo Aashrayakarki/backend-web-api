@@ -262,6 +262,55 @@ const searchExercise = async (req, res) => {
     }
 };
 
+const addToMyExercise = async (req, res) => {
+    const { userId, exerciseId } = req.body;
+
+    if (!userId || !exerciseId) {
+        return res.status(400).json({
+            success: false,
+            message: "User ID and Exercise ID are required"
+        });
+    }
+
+    try {
+        // Find or create the user's exercise routine
+        let userExercise = await UserExercise.findOne({ userId });
+
+        if (!userExercise) {
+            userExercise = new UserExercise({ userId, exercises: [] });
+        }
+
+        // Check if the exercise is already in the user's routine
+        const exerciseExists = userExercise.exercises.some(
+            (exercise) => exercise.exerciseId.toString() === exerciseId
+        );
+
+        if (exerciseExists) {
+            return res.status(400).json({
+                success: false,
+                message: "Exercise already added to your routine"
+            });
+        }
+
+        // Add the exercise to the user's routine
+        userExercise.exercises.push({ exerciseId });
+        await userExercise.save();
+
+        res.status(201).json({
+            success: true,
+            message: "Exercise added to your routine successfully",
+            data: userExercise
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error
+        });
+    }
+};
+
 module.exports = {
     createExercise,
     getAllExercises,
@@ -269,5 +318,6 @@ module.exports = {
     updateExercise,
     deleteExercise,
     paginationExercises,
-    searchExercise
+    searchExercise,
+    addToMyExercise 
 };

@@ -5,6 +5,10 @@ const mealSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    mealDescription: {
+        type: String,
+        required: true, 
+    },
     mealTime: {
         type: String,
         required: true,
