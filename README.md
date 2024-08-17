@@ -4,8 +4,6 @@
 
 The backend for the FitHeal application is built with Node.js and provides essential functionalities for managing fitness routines, dietary tracking, and user progress. It handles data management, authentication, and various API endpoints for workouts, diet plans, user profiles, and progress tracking.
 
-## Features
-
 ### API Endpoints
 
 #### Exercises API
