@@ -4,9 +4,9 @@ const fs = require('fs');
 
 const createExercise = async (req, res) => {
     console.log(req.body);
-    const { exerciseName, exerciseTime, exerciseCalories, exerciseLevel } = req.body;
+    const { exerciseName, exerciseTime, exerciseCalories, exerciseLevel, exerciseReps, exerciseSets, exerciseDescription} = req.body;
 
-    if (!exerciseName || !exerciseTime || !exerciseCalories || !exerciseLevel) {
+    if (!exerciseName || !exerciseTime || !exerciseCalories || !exerciseLevel || !exerciseReps || !exerciseSets || !exerciseDescription) {
         return res.status(400).json({
             "success": false,
             "message": "Please enter all the fields"
@@ -29,7 +29,15 @@ const createExercise = async (req, res) => {
         });
     }
 
-    const { exerciseVideo, exerciseThumbnail } = req.files;
+    // validate if there is an instruction
+    if (!req.files || !req.files.exerciseInstruction) {
+        return res.status(400).json({
+            "success": false,
+            "message": "Please upload an instruction!!"
+        });
+    }
+
+    const { exerciseVideo, exerciseThumbnail, exerciseInstruction } = req.files;
 
     // upload video
     // 1. Generate new video name
@@ -48,6 +56,15 @@ const createExercise = async (req, res) => {
         await exerciseThumbnail.mv(thumbnailUploadPath);
     }
 
+    let instructionName = null;
+    if (exerciseInstruction) {
+        instructionName = `${Date.now()}-${exerciseInstruction.name}`;
+        // 2. Make an upload path (/path/upload - directory)
+        const instructionUploadPath = path.join(__dirname, `../public/products/${instructionName}`);
+        // 3. Move to that directory (await, try-catch)
+        await exerciseInstruction.mv(instructionUploadPath);
+    }
+
     try {
         await exerciseVideo.mv(videoUploadPath);
 
@@ -57,6 +74,10 @@ const createExercise = async (req, res) => {
             exerciseCalories,
             exerciseTime,
             exerciseLevel,
+            exerciseReps,
+            exerciseSets,
+            exerciseDescription,
+            exerciseInstruction: instructionName,
             exerciseVideo: videoName,
             exerciseThumbnail: thumbnailName
         });
@@ -135,6 +156,10 @@ const deleteExercise = async (req, res) => {
             const thumbnailPath = path.join(__dirname, `../public/products/${exercise.exerciseThumbnail}`);
             fs.unlinkSync(thumbnailPath);
         }
+        if (exercise.exerciseInstruction) {
+            const instructionPath = path.join(__dirname, `../public/products/${exercise.exerciseInstruction}`);
+            fs.unlinkSync(instructionPath);
+        }
         res.status(201).json({
             "success": true,
             "message": "Exercise deleted successfully"
@@ -178,6 +203,21 @@ const updateExercise = async (req, res) => {
                 const existingExercise = await Exercise.findById(req.params.id);
                 const oldThumbnailPath = path.join(__dirname, `../public/products/${existingExercise.exerciseThumbnail}`);
                 fs.unlinkSync(oldThumbnailPath);
+            }
+        }
+
+        // if there is instruction
+        if (req.files && req.files.exerciseInstruction) {
+            const { exerciseInstruction } = req.files;
+            const instructionName = `${Date.now()}-${exerciseInstruction.name}`;
+            const instructionUploadPath = path.join(__dirname, `../public/products/${instructionName}`);
+            await exerciseInstruction.mv(instructionUploadPath);
+            req.body.exerciseInstruction = instructionName;
+
+            if (req.body.exerciseInstruction) {
+                const existingExercise = await Exercise.findById(req.params.id);
+                const oldInstructionPath = path.join(__dirname, `../public/products/${existingExercise.exerciseInstruction}`);
+                fs.unlinkSync(oldInstructionPath);
             }
         }
 

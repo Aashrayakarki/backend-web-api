@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendOtp = require("../service/sendOtp");
 require('dotenv').config();
+const asyncHandler = require('express-async-handler');
+
 
 const createUser = async (req, res) => {
     console.log(req.body);
@@ -126,6 +128,16 @@ const getSingleUser = async (req, res) => {
         res.status(500).send({ message: 'Server error' });
     }
 }
+
+const getMe = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id).select("-password");
+  
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  
+    res.status(200).json(user);
+  });
 
 const updateUser = async (req, res) => {
     try {
@@ -262,5 +274,6 @@ module.exports = {
     getSingleUser,
     updateUser,
     forgotPassword,
-    verifyOtpAndSetPassword
+    verifyOtpAndSetPassword,
+    getMe
 }

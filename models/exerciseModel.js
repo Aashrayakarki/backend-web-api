@@ -17,6 +17,22 @@ const exerciseSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    exerciseReps:{
+        type: String,
+        required: true,
+    },
+    exerciseSets:{
+        type: String,
+        required: true,
+    },
+    exerciseDescription: {
+        type: String,
+        required: true,
+    },
+    exerciseInstruction: {
+        type: String,
+        required: true,
+    },
     exerciseThumbnail: {
         type: String,
         required: true,
