@@ -6,8 +6,8 @@ router.post('/register', userController.createUser);
 router.post('/login', userController.loginUser);
 router.get('/get_single_user/:id', authGuard, userController.getSingleUser);
 router.put('/update_profile/:id', authGuard, userController.updateUser);
-router.post('/forgot_password',authGuard, userController.forgotPassword)
-router.post('/verify_otp',authGuard, userController.verifyOtpAndSetPassword)
+router.post('/forgot_password', userController.forgotPassword)
+router.post('/verify_otp', userController.verifyOtpAndSetPassword)
 router.get('/getMe',authGuard,userController.getMe)
 
 module.exports = router
